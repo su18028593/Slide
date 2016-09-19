@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body{padding:0;margin:0;  }
+        #div1{width:520px;height:280px;border:1px solid #000;margin:100px auto 0;padding:0;position:relative;overflow:hidden;}
+        #div1 span{display:block;width:100%;text-align:center;background:#000;opacity:0.6;filter:alpha(opacity=60);position:absolute;bottom:0px;color:#fff;}
+        #div1 input {width:80px;height:80px;background:#000;z-index:1;cursor:pointer;color:#fff;font-size:30px;opacity:0.3;filter:alpha(opacity=30);position:absolute;top:50%;margin-top:-40px;}
+        #div1 input:hover{opacity:0.6;filter:alpha(opacity=60);}
+        #div1 input#prev{left:10px;}
+        #div1 input#next{right:10px;}
+        #ul1{padding:0;margin:0;position:absolute;left:0;top:0;}
+        li{width:520px;height:280px;list-style:none;float:left;}
+        img{display:block;vertical-align:top;}
+        #div1 p{width:100%;position:absolute;bottom:5px;left:0;z-index:1;text-align:center;}
+        #div1 p a{background:#ccc;padding:1px 9px;margin-left:5px;border-radius:100%;}
+        #div1 p a.active{ background:#F90;}
+    </style>
+    <script src="js/move1.js" ></script>
+    <script>
+        window.onload = function(){
+            var oDiv = document.getElementById('div1');
+            var aSpan = oDiv.getElementsByTagName('span');
+            var oUl = document.getElementById('ul1');
+            var aLi = oUl.getElementsByTagName('li');
+            var aNext = document.getElementById('next');
+            var aPrev = document.getElementById('prev');
+            var aActive = oDiv.getElementsByTagName('a');
+            var num = 0;
+            var iLen = aLi.length;
+            var iWidth = aLi[0].offsetWidth;
+            var iTimer = null;
+
+            function show(){
+                function init(){
+                    oUl.style.width = iLen*iWidth + 'px';
+                    move1( oUl,{
+                        left :-num * iWidth
+                    } );
+                    for(var i = 0;i<iLen;i++){
+                        aActive[i].className = '';
+                    }
+                    aActive[num].className = 'active';
+                    aSpan[0].innerHTML = num + 1 + '/' + iLen;
+                }
+                init();
+                function Inter(){
+                    clearInterval( iTimer );
+                    iTimer = setInterval( function(){
+                        num++;
+                        if(-num < -iLen+1 ){
+                            num=0;
+                        }
+                        init();
+                    },3000 )
+                }
+                Inter();
+            }
+            show();
+
+            aNext.onclick = function(){
+                num++;
+                if(-num<-iLen+1){
+                    num= 0 ;
+                }
+                show();
+            };
+            aPrev.onclick = function(){
+                num--;
+                if(num<0){
+                    num=iLen-1
+                }
+                show();
+            };
+            for(var i = 0;i<iLen;i++){
+                aActive[i].index = i;
+                aActive[i].onclick = function(){
+                    //alert(1);
+                    num = this.index;
+                    show();
+                    //oUl.style.left = -this.index * iWidth + 'px';
+                };
+            }
+        }
+
+    </script>
+</head>
+<body>
+<div id="div1">
+    <input id="prev" type="button" value="<">
+    <input id="next" type="button" value=">">
+    <ul id="ul1">
+        <li><img src="imgs/1.jpg"/></li>
+        <li><img src="imgs/2.jpg"/></li>
+        <li><img src="imgs/3.jpg"/></li>
+        <li><img src="imgs/4.jpg"/></li>
+        <li><img src="imgs/5.jpg"/></li>
+    </ul>
+    <p>
+        <a class="active" href="#"></a>
+        <a href="#"></a>
+        <a href="#"></a>
+        <a href="#"></a>
+        <a href="#"></a>
+    </p>
+    <span></span>
+</div>
+</body>
+</html>
